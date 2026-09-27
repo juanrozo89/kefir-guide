@@ -1,5 +1,7 @@
 # Kéfir casero
 
+Publicada en <https://kefir-pi.vercel.app/>.
+
 Guías prácticas de kéfir de agua (`src/pages/agua/` → `/agua/…`) y de leche (`src/pages/leche/` → `/leche/…`). Cada kéfir es una sección con una página por tema (lo esencial, calculadora, temperatura, proporciones, etc.); su submenú está en `partials/agua-nav.html` y `partials/leche-nav.html`, y se incluye al principio de cada página. La lógica de la calculadora es común (`public/js/calculadora.js`); cada página de calculadora le pasa su modelo en un `<script>` al final. La paleta ámbar de agua se activa con `<div class="t-agua">` dentro de `<main>`; sin esa clase rige la teal de leche.
 
 Static site boilerplate: HTML partials composed by a dependency-free `build.js` (Node ≥ 20 builtins only). Output is plain HTML in `dist/`, deployable to Vercel, Netlify, Cloudflare Pages or any static host.
