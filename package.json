@@ -1,0 +1,9 @@
+{
+  "name": "simple-webpage",
+  "private": true,
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "build": "node build.js",
+    "dev": "node build.js --watch"
+  }
+}

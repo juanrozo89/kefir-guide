@@ -1,0 +1,111 @@
+<!--
+title: Calculadora · Kéfir de leche
+description: Cuántos gránulos usar y cuántas horas fermentar según la temperatura de tu cocina y el volumen de leche.
+-->
+<div class="stack">
+  {{> leche-nav}}
+
+  <header>
+    <p class="eyebrow">Kéfir de leche</p>
+    <h1>Calculadora de tanda</h1>
+    <p class="lede">
+      Pon la temperatura de tu cocina, la proporción de gránulos y el volumen de leche: te dice cuántos
+      gramos usar y a qué hora colar.
+    </p>
+  </header>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Tu tanda</h2>
+      <span class="note">Meta: pH ≈ 4,5 · gránulos escurridos en húmedo</span>
+    </div>
+
+    <div class="controls">
+      <div class="ctl">
+        <label for="temp">Temperatura de la cocina <span class="v" id="tempV">17 °C</span></label>
+        <input type="range" id="temp" min="12" max="28" step="0.5" value="17" />
+        <div class="scale"><span>12 °C</span><span>cocina fría</span><span>28 °C</span></div>
+      </div>
+      <div class="ctl">
+        <label for="ratio">Gránulos en la leche <span class="v" id="ratioV">12 % p/v</span></label>
+        <input type="range" id="ratio" min="2" max="20" step="0.5" value="12" />
+        <div class="scale"><span>2 %</span><span>convencional: 2–10 %</span><span>20 %</span></div>
+      </div>
+      <div class="ctl" style="grid-column: 1/-1">
+        <label for="volCustom">Leche por tanda</label>
+        <div class="seg" id="volGroup" role="group" aria-label="Volumen de leche">
+          <button type="button" data-v="250">250 ml</button>
+          <button type="button" data-v="500">500 ml</button>
+          <button type="button" data-v="750">750 ml</button>
+          <button type="button" data-v="1000">1 litro</button>
+          <label class="seg-custom" id="volCustomLabel">
+            <input type="number" id="volCustom" min="1" max="9999" step="1" placeholder="otro" />
+            <span>ml</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="result">
+      <div class="hero"><span class="n" id="hrs">—</span><span class="u">horas</span></div>
+      <dl class="facts">
+        <div class="fact"><dt>Gránulos</dt><dd id="grams">—</dd></div>
+        <div class="fact"><dt>En cucharadas</dt><dd id="spoons">—</dd></div>
+        <div class="fact"><dt>Si empiezas ahora</dt><dd id="clock">—</dd></div>
+      </dl>
+      <p class="verdict ok" id="verdict">—</p>
+    </div>
+
+    <div class="chartbox">
+      <svg class="chart" id="chart" viewBox="0 0 760 330" role="img"
+        aria-label="Curva de horas de fermentación contra temperatura ambiente"></svg>
+    </div>
+    <p class="panel-foot">
+      Ubica la temperatura de tu cocina (también puedes arrastrar sobre el gráfico). La zona rojiza a
+      la izquierda de los 17 °C es <b>extrapolación</b>: ningún estudio primario con gránulos midió por
+      debajo de 17 °C. Modelo: <code>t = 24 h × (10/r)^0,55 × 2,2^((20−T)/10)</code>, con
+      <code>r</code> en % p/v y <code>T</code> en °C. El Q10 = 2,2 es medido; el exponente 0,55 está
+      <b>ajustado</b> a los anclajes publicados, no medido directamente. Corrígelo con tu propia primera
+      tanda. Más detalle en <a href="/leche/temperatura/">Temperatura</a>.
+    </p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>La tabla para la nevera</h2>
+      <span class="note">Horas hasta pH ≈ 4,5</span>
+    </div>
+    <div class="grid-wrap">
+      <table class="grid" id="grid"></table>
+    </div>
+  </section>
+</div>
+
+<script src="/js/calculadora.js"></script>
+<script>
+  kefirCalc({
+    key: "kefir-bogota-v1",
+    tRef: 20,
+    hRef: 24,
+    rRef: 10,
+    q10: 2.2,
+    n: 0.55,
+    tMax: 28,
+    vol: 500,
+    spoonG: 15,
+    gridT: [14, 16, 18, 20, 22, 24],
+    gridR: [2, 5, 7.5, 10, 15, 20],
+    ramp: [20, 28, 40, 60, 96],
+    verdict: function (h) {
+      if (h > 48)
+        return ["warn", "<b>Demasiado lento.</b> Más de 48 h supera la ventana sanitaria de pH ≤ 4,6 en 24–36 h. Sube los gránulos a 10–15 % p/v."];
+      if (h > 36)
+        return ["warn", "<b>Al límite.</b> Pasas las 36 h de la guía sanitaria. Funciona, pero sube un poco la proporción o busca un rincón más tibio."];
+      if (h < 14)
+        return ["warn", "<b>Muy rápido.</b> Vas a tener que colar a deshoras y el kéfir sale ácido y poco viscoso. Baja los gránulos."];
+      if (h >= 20 && h <= 30)
+        return ["ok", "<b>Una tanda al día.</b> Cuelas a la misma hora cada día sin pensar en el reloj: el punto ideal."];
+      return ["ok", "<b>Funciona.</b> Fuera del ritmo diario de 20–30 h, pero dentro de la ventana segura."];
+    },
+  });
+</script>

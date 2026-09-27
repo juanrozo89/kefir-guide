@@ -1,0 +1,129 @@
+<!--
+title: Calculadora · Kéfir de agua
+description: Cuántos tibicos usar y cuántas horas fermentar según la temperatura de tu cocina, el volumen y el azúcar.
+-->
+<div class="t-agua stack">
+  {{> agua-nav}}
+
+  <header>
+    <p class="eyebrow">Kéfir de agua</p>
+    <h1>Calculadora de tanda</h1>
+    <p class="lede">
+      Pon la temperatura de tu cocina, la proporción de tibicos, el volumen y el azúcar: te dice
+      cuántos gramos usar y a qué hora colar.
+    </p>
+  </header>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Tu tanda</h2>
+      <span class="note">Meta: pH ≈ 4,0–4,5 (1.ª fermentación) · tibicos escurridos en húmedo</span>
+    </div>
+
+    <div class="controls">
+      <div class="ctl">
+        <label for="temp">Temperatura de la cocina <span class="v" id="tempV">17 °C</span></label>
+        <input type="range" id="temp" min="12" max="30" step="0.5" value="17" />
+        <div class="scale"><span>12 °C</span><span>cocina fría</span><span>30 °C</span></div>
+      </div>
+      <div class="ctl">
+        <label for="ratio">Tibicos en el agua <span class="v" id="ratioV">10 % p/v</span></label>
+        <input type="range" id="ratio" min="2" max="15" step="0.5" value="10" />
+        <div class="scale"><span>2 %</span><span>convencional: 3–5 %</span><span>15 %</span></div>
+      </div>
+      <div class="ctl">
+        <label for="volCustom">Agua por tanda</label>
+        <div class="seg" id="volGroup" role="group" aria-label="Volumen de agua">
+          <button type="button" data-v="500">500 ml</button>
+          <button type="button" data-v="1000">1 litro</button>
+          <button type="button" data-v="1500">1,5 litros</button>
+          <button type="button" data-v="2000">2 litros</button>
+          <label class="seg-custom" id="volCustomLabel">
+            <input type="number" id="volCustom" min="1" max="9999" step="1" placeholder="otro" />
+            <span>ml</span>
+          </label>
+        </div>
+      </div>
+      <div class="ctl">
+        <label for="sugar">Azúcar <span class="v" id="sugarV">65 g/L</span></label>
+        <input type="range" id="sugar" min="40" max="120" step="5" value="65" />
+        <div class="scale"><span>40 g/L</span><span>óptimo ≈ 70 g/L</span><span>120 g/L</span></div>
+      </div>
+    </div>
+
+    <div class="result">
+      <div class="hero"><span class="n" id="hrs">—</span><span class="u">horas</span></div>
+      <dl class="facts">
+        <div class="fact"><dt>Tibicos</dt><dd id="grams">—</dd></div>
+        <div class="fact"><dt>En cucharadas</dt><dd id="spoons">—</dd></div>
+        <div class="fact"><dt>Si empiezas ahora</dt><dd id="clock">—</dd></div>
+        <div class="fact"><dt>Azúcar</dt><dd id="sugarg">—</dd></div>
+      </dl>
+      <p class="verdict ok" id="verdict">—</p>
+    </div>
+
+    <div class="chartbox">
+      <svg class="chart" id="chart" viewBox="0 0 760 330" role="img"
+        aria-label="Curva de horas de fermentación contra temperatura ambiente"></svg>
+    </div>
+    <p class="panel-foot">
+      Ubica la temperatura de tu cocina (también puedes arrastrar sobre el gráfico). La zona rojiza
+      a la izquierda de los 17 °C es extrapolación. Modelo:
+      <code>t = 24 h × (5/r)^0,55 × 2,0^((25−T)/10)</code>, con <code>r</code> en % p/v y
+      <code>T</code> en °C. Ancla: 5 % p/v a 25 °C → pH ≈ 4,0 en 24 h (estimada). El Q10 = 2,0 es
+      una estimación por analogía con el kéfir de leche (Q10 medido 2,2), y el exponente 0,55
+      también viene del kéfir de leche; sin medición directa para tibicos. Más detalle en
+      <a href="/agua/temperatura/">Temperatura</a>.
+    </p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>La tabla para la nevera</h2>
+      <span class="note">Horas hasta pH ≈ 4,0</span>
+    </div>
+    <div class="grid-wrap">
+      <table class="grid" id="grid"></table>
+    </div>
+  </section>
+</div>
+
+<script src="/js/calculadora.js"></script>
+<script>
+  kefirCalc({
+    key: "kefir-agua-bogota-v2",
+    tRef: 25,
+    hRef: 24,
+    rRef: 5,
+    q10: 2.0,
+    n: 0.55,
+    // penalización suave lejos del óptimo de 70 g/L (más fuerte por encima: estrés osmótico)
+    sugarFactor: function (s) {
+      var sigma = s < 70 ? 50 : 25;
+      return 1 + 0.28 * (1 - Math.exp(-Math.pow(s - 70, 2) / (2 * sigma * sigma)));
+    },
+    tMax: 30,
+    vol: 1000,
+    spoonG: 20,
+    gridT: [14, 16, 18, 20, 22, 24, 26],
+    gridR: [3, 5, 8, 10, 15],
+    ramp: [20, 30, 42, 58, 80],
+    verdict: function (h, s) {
+      var v;
+      if (h > 60)
+        v = ["warn", "<b>Demasiado lento.</b> Más de 60 h aumenta el riesgo de que gane el microorganismo equivocado. Sube los tibicos a 8–10 % p/v."];
+      else if (h > 45)
+        v = ["warn", "<b>Al límite.</b> Entre 45 y 60 h. Funciona, pero con 8 % de tibicos entrarías en rango cómodo."];
+      else if (h < 14)
+        v = ["warn", "<b>Muy rápido.</b> En menos de 14 h el kéfir saldrá muy ácido y avinagrado. Baja la proporción de tibicos."];
+      else if (h >= 22 && h <= 36)
+        v = ["ok", "<b>Una tanda al día.</b> Cuelas a la misma hora cada día sin pensar en el reloj: el punto ideal."];
+      else v = ["ok", "<b>Funciona.</b> Dentro de la ventana segura. Ajusta según tu rutina."];
+      if (s > 100) {
+        v[0] = "warn";
+        v[1] += " Azúcar alta (" + s + " g/L): estrés osmótico, los granos fermentan más despacio; baja a 60–80 g/L.";
+      }
+      return v;
+    },
+  });
+</script>

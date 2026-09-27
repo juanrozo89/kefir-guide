@@ -1,0 +1,47 @@
+<!--
+title: Temperatura · Kéfir de leche
+description: Cuánto alarga una cocina fresca la fermentación del kéfir de leche, según la cinética medida.
+-->
+<div class="stack">
+  {{> leche-nav}}
+
+  <header>
+    <p class="eyebrow">Kéfir de leche</p>
+    <h1>Por qué el frío cambia las reglas</h1>
+  </header>
+
+  <div class="prose">
+    <span class="tag ev">Medido y verificado</span>
+    <p>
+      La acidificación del kéfir sigue una cinética de Arrhenius. La energía de activación medida a
+      presión atmosférica es <b>56,83 kJ/mol</b>, lo que da un <b>Q10 ≈ 2,2</b> cerca de 20 °C:
+      <i>cada 10 °C menos, el tiempo se duplica.</i>
+    </p>
+    <p>
+      El ancla más útil que existe en la literatura para uso doméstico: <b>gránulos al 10 % p/v en
+      leche UHT semidescremada a 20 ± 1 °C llegan a pH 4,5 a las 24 h</b>, y siguen bajando hasta
+      estabilizarse en pH 3,9 a las 42 h.
+    </p>
+    <p>Una cocina fresca está <i>debajo</i> de esa ancla, no dentro de ella:</p>
+    <div class="tbl-wrap">
+      <table class="tbl">
+        <thead><tr><th>Tu cocina</th><th>Tiempo a pH ≈ 4,5 con 10 % de gránulos</th></tr></thead>
+        <tbody>
+          <tr><td>20 °C (día soleado, cocina con estufa prendida)</td><td>24 h · medido</td></tr>
+          <tr><td>18 °C</td><td>~28 h · modelado</td></tr>
+          <tr><td>16 °C (cocina fresca típica)</td><td>~33 h · modelado</td></tr>
+          <tr><td>14 °C (noche, apartamento frío, piso alto)</td><td>~38 h · modelado</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p>Y la evidencia de que copiar recetas pensadas para climas cálidos falla es explícita:</p>
+    <ul>
+      <li><b>1 % de gránulos, 20 °C, 48 h → pH 5,04.</b> Nunca llegó a ser kéfir.</li>
+      <li><b>2 % de gránulos, 10–15 °C, 24 h → pH 6,2.</b> Prácticamente leche sin fermentar.</li>
+    </ul>
+    <p>
+      Una buena noticia compensa: <b>los gránulos crecen mejor a 20 °C que a 25 o 30 °C.</b> Una cocina
+      fresca es lenta para fermentar pero excelente para propagar gránulos.
+    </p>
+  </div>
+</div>
