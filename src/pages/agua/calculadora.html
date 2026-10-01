@@ -71,7 +71,9 @@ description: Cuántos tibicos usar y cuántas horas fermentar según la temperat
       Ubica la temperatura de tu cocina (también puedes arrastrar sobre el gráfico). La zona rojiza
       a la izquierda de los 17 °C es extrapolación. El cuadrado es la referencia del modelo. Modelo:
       <code>t = 24 h × (5/r)^0,3 × 2,5^((25−T)/10)</code>, con <code>r</code> en % p/v y
-      <code>T</code> en °C. Ancla: 5 % p/v a 25 °C → pH ≈ 4,0 en 24 h (estimada). El Q10 = 2,5 es
+      <code>T</code> en °C. Ancla: 5 % p/v a 25 °C → pH ≈ 4,0 en 24 h, coherente con el promedio de 69 granos en frasco
+      cerrado (~34 h a 21 °C con 6 %) [Breselge et al., 2025]; en vaso abierto con azúcar morena fue
+      más rápido (~15 h) [Wichello et al., 2025]. El Q10 = 2,5 es
       el valor medido en kéfir de agua entre 17 y 29 °C para los ácidos que bajan el pH (láctico
       2,64, acético 2,32) [Laureys et al., 2022]; por debajo de 17 °C es extrapolación. El
       exponente 0,3 sale de tibicos a 21 °C: triplicar los granos (de ~9 a ~26 % p/v) subió la
@@ -123,7 +125,7 @@ description: Cuántos tibicos usar y cuántas horas fermentar según la temperat
     spoonG: 20,
     zone: [8, 15],
     anchors: [
-      { T: 25, h: 24, label: "25 °C · 5 % · 24 h → pH ≈ 4,0 · estimación" },
+      { T: 25, h: 24, label: "25 °C · 5 % · 24 h → pH ≈ 4,0 · referencia, coherente con Breselge et al., 2025" },
     ],
     gridT: [14, 16, 18, 20, 22, 24, 26],
     gridR: [3, 5, 8, 10, 15],
