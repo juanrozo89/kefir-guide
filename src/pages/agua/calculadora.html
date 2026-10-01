@@ -17,7 +17,7 @@ description: Cuántos tibicos usar y cuántas horas fermentar según la temperat
   <section class="panel">
     <div class="panel-head">
       <h2>Tu tanda</h2>
-      <span class="note">Meta: pH ≈ 4,0–4,5 (1.ª fermentación) · tibicos escurridos en húmedo</span>
+      <span class="note">Meta: pH ≈ 4,0 (1.ª fermentación) · tibicos escurridos en húmedo</span>
     </div>
 
     <div class="controls">
@@ -29,7 +29,7 @@ description: Cuántos tibicos usar y cuántas horas fermentar según la temperat
       <div class="ctl">
         <label for="ratio">Tibicos en el agua <span class="v" id="ratioV">10 % p/v</span></label>
         <input type="range" id="ratio" min="2" max="15" step="0.5" value="10" />
-        <div class="scale"><span>2 %</span><span>convencional: 3–5 %</span><span>15 %</span></div>
+        <div class="scale"><span>2 %</span><span>tradicional: 5–10 %</span><span>15 %</span></div>
       </div>
       <div class="ctl">
         <label for="volCustom">Agua por tanda</label>
@@ -47,7 +47,7 @@ description: Cuántos tibicos usar y cuántas horas fermentar según la temperat
       <div class="ctl">
         <label for="sugar">Azúcar <span class="v" id="sugarV">65 g/L</span></label>
         <input type="range" id="sugar" min="40" max="120" step="5" value="65" />
-        <div class="scale"><span>40 g/L</span><span>óptimo ≈ 70 g/L</span><span>120 g/L</span></div>
+        <div class="scale"><span>40 g/L</span><span>no cambia el tiempo</span><span>120 g/L</span></div>
       </div>
     </div>
 
@@ -66,14 +66,34 @@ description: Cuántos tibicos usar y cuántas horas fermentar según la temperat
       <svg class="chart" id="chart" viewBox="0 0 760 330" role="img"
         aria-label="Curva de horas de fermentación contra temperatura ambiente"></svg>
     </div>
+    <ul class="anchors" id="anchors" aria-label="Anclajes de la literatura"></ul>
     <p class="panel-foot">
       Ubica la temperatura de tu cocina (también puedes arrastrar sobre el gráfico). La zona rojiza
-      a la izquierda de los 17 °C es extrapolación. Modelo:
-      <code>t = 24 h × (5/r)^0,55 × 2,0^((25−T)/10)</code>, con <code>r</code> en % p/v y
-      <code>T</code> en °C. Ancla: 5 % p/v a 25 °C → pH ≈ 4,0 en 24 h (estimada). El Q10 = 2,0 es
-      una estimación por analogía con el kéfir de leche (Q10 medido 2,2), y el exponente 0,55
-      también viene del kéfir de leche; sin medición directa para tibicos. Más detalle en
+      a la izquierda de los 17 °C es extrapolación. El cuadrado es la referencia del modelo. Modelo:
+      <code>t = 24 h × (5/r)^0,3 × 2,5^((25−T)/10)</code>, con <code>r</code> en % p/v y
+      <code>T</code> en °C. Ancla: 5 % p/v a 25 °C → pH ≈ 4,0 en 24 h (estimada). El Q10 = 2,5 es
+      el valor medido en kéfir de agua entre 17 y 29 °C para los ácidos que bajan el pH (láctico
+      2,64, acético 2,32) [Laureys et al., 2022]; por debajo de 17 °C es extrapolación. El
+      exponente 0,3 sale de tibicos a 21 °C: triplicar los granos (de ~9 a ~26 % p/v) subió la
+      producción de ácidos solo un 35–47 %; por debajo del ~9 % es extrapolación. En el mismo
+      estudio, el azúcar entre 35 y 106 g/L no cambió la velocidad [Laureys et al., 2021]. Más detalle en
       <a href="/agua/temperatura/">Temperatura</a>.
+    </p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Menos tibicos, más horas</h2>
+      <span class="note">Una curva por temperatura; resaltada, la tuya</span>
+    </div>
+    <div class="chartbox">
+      <svg class="chart" id="chartR" viewBox="0 0 760 350" role="img"
+        aria-label="Curvas de horas de fermentación contra proporción de tibicos, una por temperatura"></svg>
+    </div>
+    <p class="panel-foot">
+      Arrastra sobre el gráfico para cambiar la proporción. Pasar de 5 % a 10 % ahorra bastante más que
+      pasar de 10 % a 15 %: los rendimientos decrecen. La franja vertical es la zona recomendada para
+      una cocina bogotana (8–15 %). Más detalle en <a href="/agua/proporciones/">Proporciones</a>.
     </p>
   </section>
 
@@ -95,25 +115,25 @@ description: Cuántos tibicos usar y cuántas horas fermentar según la temperat
     tRef: 25,
     hRef: 24,
     rRef: 5,
-    q10: 2.0,
-    n: 0.55,
-    // penalización suave lejos del óptimo de 70 g/L (más fuerte por encima: estrés osmótico)
-    sugarFactor: function (s) {
-      var sigma = s < 70 ? 50 : 25;
-      return 1 + 0.28 * (1 - Math.exp(-Math.pow(s - 70, 2) / (2 * sigma * sigma)));
-    },
+    q10: 2.5,
+    // n medido en tibicos a 21 °C, ~9–26 % p/v (Laureys et al., 2021); el azúcar (35–106 g/L) no cambió la velocidad
+    n: 0.3,
     tMax: 30,
     vol: 1000,
     spoonG: 20,
+    zone: [8, 15],
+    anchors: [
+      { T: 25, h: 24, label: "25 °C · 5 % · 24 h → pH ≈ 4,0 · estimación" },
+    ],
     gridT: [14, 16, 18, 20, 22, 24, 26],
     gridR: [3, 5, 8, 10, 15],
     ramp: [20, 30, 42, 58, 80],
     verdict: function (h, s) {
       var v;
       if (h > 60)
-        v = ["warn", "<b>Demasiado lento.</b> Más de 60 h aumenta el riesgo de que gane el microorganismo equivocado. Sube los tibicos a 8–10 % p/v."];
+        v = ["warn", "<b>Demasiado lento.</b> Más de 60 h aumenta el riesgo de que gane el microorganismo equivocado. Busca un rincón más tibio y sube los tibicos a 8–10 % p/v."];
       else if (h > 45)
-        v = ["warn", "<b>Al límite.</b> Entre 45 y 60 h. Funciona, pero con 8 % de tibicos entrarías en rango cómodo."];
+        v = ["warn", "<b>Al límite.</b> Entre 45 y 60 h. Funciona, pero un rincón 2–3 °C más tibio te mete en rango cómodo."];
       else if (h < 14)
         v = ["warn", "<b>Muy rápido.</b> En menos de 14 h el kéfir saldrá muy ácido y avinagrado. Baja la proporción de tibicos."];
       else if (h >= 22 && h <= 36)
@@ -121,7 +141,7 @@ description: Cuántos tibicos usar y cuántas horas fermentar según la temperat
       else v = ["ok", "<b>Funciona.</b> Dentro de la ventana segura. Ajusta según tu rutina."];
       if (s > 100) {
         v[0] = "warn";
-        v[1] += " Azúcar alta (" + s + " g/L): estrés osmótico, los granos fermentan más despacio; baja a 60–80 g/L.";
+        v[1] += " Azúcar alta (" + s + " g/L): por encima de 106 g/L no hay estudios; baja a 60–80 g/L.";
       }
       return v;
     },

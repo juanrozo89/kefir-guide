@@ -377,6 +377,23 @@ table.tbl {
   color: var(--ink-3);
 }
 
+.fig {
+  margin: 20px 0;
+}
+
+.fig img {
+  display: block;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+}
+
+.fig figcaption {
+  margin-top: 8px;
+  font-size: 13px;
+  color: var(--ink-3);
+}
+
 .callout {
   background: var(--accent-soft);
   border-left: 3px solid var(--accent);
