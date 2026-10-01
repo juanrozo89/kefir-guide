@@ -60,13 +60,30 @@ description: Cuántos gránulos usar y cuántas horas fermentar según la temper
       <svg class="chart" id="chart" viewBox="0 0 760 330" role="img"
         aria-label="Curva de horas de fermentación contra temperatura ambiente"></svg>
     </div>
+    <ul class="anchors" id="anchors" aria-label="Anclajes de la literatura"></ul>
     <p class="panel-foot">
       Ubica la temperatura de tu cocina (también puedes arrastrar sobre el gráfico). La zona rojiza a
       la izquierda de los 17 °C es <b>extrapolación</b>: ningún estudio primario con gránulos midió por
-      debajo de 17 °C. Modelo: <code>t = 24 h × (10/r)^0,55 × 2,2^((20−T)/10)</code>, con
+      debajo de 17 °C. Los cuadrados son anclajes publicados; las ✕, tandas que nunca cuajaron. Modelo: <code>t = 24 h × (10/r)^0,55 × 2,2^((20−T)/10)</code>, con
       <code>r</code> en % p/v y <code>T</code> en °C. El Q10 = 2,2 es medido; el exponente 0,55 está
       <b>ajustado</b> a los anclajes publicados, no medido directamente. Corrígelo con tu propia primera
       tanda. Más detalle en <a href="/leche/temperatura/">Temperatura</a>.
+    </p>
+  </section>
+
+  <section class="panel">
+    <div class="panel-head">
+      <h2>Menos gránulos, más horas</h2>
+      <span class="note">Una curva por temperatura; resaltada, la tuya</span>
+    </div>
+    <div class="chartbox">
+      <svg class="chart" id="chartR" viewBox="0 0 760 350" role="img"
+        aria-label="Curvas de horas de fermentación contra proporción de gránulos, una por temperatura"></svg>
+    </div>
+    <p class="panel-foot">
+      Arrastra sobre el gráfico para cambiar la proporción. Pasar de 5 % a 10 % ahorra más horas que
+      pasar de 10 % a 20 %: los rendimientos decrecen. La franja vertical es la zona recomendada para
+      una cocina bogotana (10–15 %). Más detalle en <a href="/leche/proporciones/">Proporciones</a>.
     </p>
   </section>
 
@@ -93,6 +110,13 @@ description: Cuántos gránulos usar y cuántas horas fermentar según la temper
     tMax: 28,
     vol: 500,
     spoonG: 15,
+    zone: [10, 15],
+    anchors: [
+      { T: 20, h: 24, label: "20 °C · 10 % · 24 h → pH 4,5 · Foods 2021" },
+      { T: 26, h: 24, label: "26 °C · 5,5 % · 24 h → pH 4,08 · Gels 2025" },
+      { T: 20, h: 48, fail: true, label: "20 °C · 1 % · 48 h → pH 5,04 · nunca cuajó" },
+      { T: 14, h: 24, fail: true, label: "10–15 °C · 2 % · 24 h → pH 6,2 · nunca cuajó" },
+    ],
     gridT: [14, 16, 18, 20, 22, 24],
     gridR: [2, 5, 7.5, 10, 15, 20],
     ramp: [20, 28, 40, 60, 96],

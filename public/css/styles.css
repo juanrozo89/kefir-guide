@@ -782,6 +782,48 @@ svg.chart {
   opacity: 0.55;
 }
 
+.dayband {
+  fill: var(--accent-soft);
+  opacity: 0.8;
+}
+
+.anchor {
+  fill: var(--surface);
+  stroke: var(--ink-2);
+  stroke-width: 2;
+}
+
+.anchor-fail {
+  fill: none;
+  stroke: var(--warn);
+  stroke-width: 2.5;
+  stroke-linecap: round;
+}
+
+.anchors {
+  list-style: none;
+  margin: 0;
+  padding: 0 20px 14px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 18px;
+  font-size: 12.5px;
+  color: var(--ink-2);
+}
+
+.anchors li {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.anchors svg {
+  width: 12px;
+  height: 12px;
+  flex: none;
+  overflow: visible;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .curve,
   .marker {
